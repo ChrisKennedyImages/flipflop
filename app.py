@@ -767,7 +767,7 @@ with tab2:
                     st.markdown(f"**FB Title:**")
                     st.code(item.get("fb_title",""), language=None)
                     st.markdown(f"**Description:**")
-                    st.text_area("", value=item.get("fb_description",""), height=180, key=f"desc_{item['id']}", label_visibility="collapsed")
+                    st.text_area("FB Description", value=item.get("fb_description",""), height=180, key=f"desc_{item['id']}", label_visibility="collapsed")
                     st.caption(f"💡 {item.get('reasoning','')}")
 
                 st.markdown("</div>", unsafe_allow_html=True)
