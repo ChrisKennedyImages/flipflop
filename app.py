@@ -588,42 +588,41 @@ with tab1:
                                 st.warning("Upload at least one real photo.")
                             else:
                                 listing_slot = st.empty()
-                            listing_slot.markdown(atom_scanner_html("your photos", 1, 1), unsafe_allow_html=True)
-                            if True:
+                                listing_slot.markdown(atom_scanner_html("your photos", 1, 1), unsafe_allow_html=True)
+                                try:
                                     imgs = [resize_image(p.read()) for p in real_photos]
-                                    try:
-                                        listing = full_analyze(imgs, actual_cost, notes_input)
-                                        # Store thumb as b64 for display (first image)
-                                        thumb_b64 = img_to_b64(imgs[0])
-                                        batch_item = {
-                                            "id":            str(uuid.uuid4()),
-                                            "item_name":     listing.get("item_name", r.get("item_name","")),
-                                            "actual_cost":   actual_cost,
-                                            "suggested_price": listing.get("recommended_price",0),
-                                            "est_profit":    listing.get("est_profit",0),
-                                            "margin_pct":    listing.get("margin_pct",0),
-                                            "status":        "Not Listed",
-                                            "sell_price":    "",
-                                            "real_profit":   "",
-                                            "fb_title":      listing.get("fb_title",""),
-                                            "fb_description":listing.get("fb_description",""),
-                                            "condition":     listing.get("condition","Good"),
-                                            "market_score":  listing.get("market_score",0),
-                                            "notes":         notes_input,
-                                            "reasoning":     listing.get("reasoning",""),
-                                            "thumb_b64":     thumb_b64,
-                                            "created_at":    datetime.now().strftime("%Y-%m-%d %H:%M"),
-                                        }
-                                        listing_slot.empty()
-                                        st.session_state.batch_items.append(batch_item)
-                                        save_batch()
-                                        if sheets_available():
-                                            save_item_to_sheets(batch_item)
-                                        st.session_state[form_key] = False
-                                        st.success(f"✅ Added '{batch_item['item_name']}' to Sell Batch!")
-                                        st.rerun()
-                                    except Exception as e:
-                                        st.error(f"Analysis failed: {e}")
+                                    listing = full_analyze(imgs, actual_cost, notes_input)
+                                    thumb_b64 = img_to_b64(imgs[0])
+                                    batch_item = {
+                                        "id":              str(uuid.uuid4()),
+                                        "item_name":       listing.get("item_name", r.get("item_name", "")),
+                                        "actual_cost":     actual_cost,
+                                        "suggested_price": listing.get("recommended_price", 0),
+                                        "est_profit":      listing.get("est_profit", 0),
+                                        "margin_pct":      listing.get("margin_pct", 0),
+                                        "status":          "Not Listed",
+                                        "sell_price":      "",
+                                        "real_profit":     "",
+                                        "fb_title":        listing.get("fb_title", ""),
+                                        "fb_description":  listing.get("fb_description", ""),
+                                        "condition":       listing.get("condition", "Good"),
+                                        "market_score":    listing.get("market_score", 0),
+                                        "notes":           notes_input,
+                                        "reasoning":       listing.get("reasoning", ""),
+                                        "thumb_b64":       thumb_b64,
+                                        "created_at":      datetime.now().strftime("%Y-%m-%d %H:%M"),
+                                    }
+                                    listing_slot.empty()
+                                    st.session_state.batch_items.append(batch_item)
+                                    save_batch()
+                                    if sheets_available():
+                                        save_item_to_sheets(batch_item)
+                                    st.session_state[form_key] = False
+                                    st.success(f"✅ Added '{batch_item['item_name']}' to Sell Batch!")
+                                    st.rerun()
+                                except Exception as e:
+                                    listing_slot.empty()
+                                    st.error(f"Analysis failed: {e}")
 
         # Clear button
         if st.button("🗑️ Clear Browse Results", key="clear_browse"):
